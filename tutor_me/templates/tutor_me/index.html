@@ -1,0 +1,251 @@
+{% load socialaccount %}
+{% load bootstrap5 %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link rel="stylesheet" href="../../static/tutor_me/tutor_me.css"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500&family=Poppins&family=Raleway:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<html>
+    <title>TutorMe</title>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #7692FF">
+        <div class="navbar-collapse" id="navbarSupportedContent">
+            <a class="nav-link" href="{% url 'tutor_me:main' %}"><img src="../../static/tutor_me/images/Group 4.png" width="30" height="30" alt="" class="navbar-logo"></a>
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav">
+                <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:main' %}">TutorMe</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:courses' %}">Courses</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:profile' user.id %}">Profile</a></li>
+            </ul>
+            {% endif %}
+        </div>
+        <div class="navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0" action="{% url 'tutor_me:courses' %}" style="display: flex;">
+                <input class="form-control mr-sm-2" name="dept" placeholder="Search for a department" style="margin-right: 5px;">
+                <button class="btn btn-info my-2 my-sm-0" style="color: white" type="submit">Search</button>
+            </form>
+
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:logout' %}">Logout</a></li>
+                {% else %}
+<!--                    <form action="{% provider_login_url 'google' %}" class="form-button">-->
+<!--                        <button type="submit" class="submit-button"><img src="{% static 'tutor_me/images/Google__G__Logo 2.png' %}" alt="Image" width="20px" height="20px"/> Login with Google</button>-->
+<!--                    </form>-->
+                    <form action="{% provider_login_url 'google' %}" class="form-button">
+                        <button type="submit" class="login-button">Login</button>
+                    </form>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <img src="../../static/tutor_me/images/Group 3.png" alt="" width="195" height="195" style="display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    width: auto;" class="homepage-logo">
+    <h1 style="text-align: center; color: #7692FF; margin-top: 30px; font-family: 'Nunito', sans-serif;">Tutoring Made Easy.</h1>
+    <hr style="width: 50%; margin: auto; margin-top: 50px"/>
+
+    {% if user.is_authenticated %}
+    <div class="container-fluid" style="margin-bottom: 15px">
+    <!-- comment. at this stage you are not a TM-user so user.first_name and user.last_name should be used instead of
+    TM_user.name -->
+        <p style="text-align: center; font-family: 'Raleway', sans-serif; font-size: x-large; margin-top: 20px;">Welcome to TutorMe! </p>
+        <p style="text-align: center; font-family: 'Raleway', sans-serif; font-size: small;">You are logged in as {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</p>
+        {% if user.tm_user.is_student %}
+        <p style="text-align: center; font-family: 'Raleway', sans-serif; font-size: large; color: darkcyan">
+            Go to the search bar or 'Courses' to find tutors in courses you need help with! </p>
+        {% endif %}
+        {% if not user.tm_user.is_student and not user.tm_user.is_tutor %}
+            <p>You are not a student or a tutor</p>
+            <form action="{% url 'tutor_me:select_class' user.id %}" method="post">
+                {% csrf_token %}
+                <fieldset>
+                    <p>Please select which you are:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" name="is_tutor" type="radio" value="False">
+                        <label class="form-check-label" for="is_tutor">
+                            Student
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="is_tutor" type="radio" value="True">
+                        <label class="form-check-label" for="is_tutor">
+                            Tutor
+                        </label>
+                    </div>
+                </fieldset>
+                {% buttons %}
+                <button class="btn btn-info my-2 my-sm-0" style="color: white" type="submit">Submit</button>
+                <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                {% endbuttons %}
+            </form>
+        {% endif %}
+        {% comment %} {% if user.tm_user.is_tutor %}
+            <p>You are a tutor <a href="{% url 'tutor_me:clear_class' %}">Change</a></p>
+        {% endif %}
+        {% if user.tm_user.is_student %}
+            <p>You are a student <a href="{% url 'tutor_me:clear_class' %}">Change</a></p>
+        {% endif %} {% endcomment %}
+        <div>
+            <div class="row" style="margin-top: 60px;">
+                {% if user.tm_user.is_student or user.tm_user.is_tutor %}
+                {% if user.tm_user.is_student %}
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Student Dashboard</h1>
+                </div>
+                {% else %}
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Tutor Dashboard</h1>
+                </div>
+                {% endif %}
+                <div class="col-md-6">
+                <div class="card"  style="margin: 0 auto">
+                    <div class="card-header">Booked Tutoring Sessions</div>
+                    <div class="card-body">
+                    <ul class="list-group">
+                        {% if sessions %}
+                    {% for booking in sessions %}
+                    {% if booking.cancelled %}
+                        <li class="list-group-item">{{ booking.student.name }} booked {{booking.tutor.name}} for {{booking.course}} at {{booking.time.to_string}} <p style="color:red">Cancelled</p></li>
+                    {% else %}
+                        <li class="list-group-item">
+                            {{ booking.student.name }} booked {{booking.tutor.name}} for {{booking.course}} at {{booking.time.to_string}} <br>
+                            {% if user.tm_user.is_tutor %}
+                                <i>Contact {{booking.student.email}} for details. </i> <br>
+                            {% else %}
+                                <i>Contact {{booking.tutor.email}} for details. </i> <br>
+                            {% endif %}
+                            <button class="btn btn-danger btn-sm" style="margin-top: 3px" data-bs-toggle="modal" data-bs-target="#cancelbooking">
+                                Cancel
+                            </button>
+                            <div class="modal fade" id="cancelbooking" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Cancel Session with {{booking.student.name}}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to cancel the tutoring session with {{ booking.student.name }} at {{ booking.time.to_string }}? <br><br> This action cannot be undone.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-danger">
+                                                <a href="{% url 'tutor_me:cancel_booking' booking.id %}" style="text-decoration: none !important; color: white">Cancel Tutoring Session</a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <div class="col-md-6">
+                        No tutoring sessions scheduled
+                    </div>
+                    {% endif %}
+                    </ul>
+                    </div>
+                </div>
+                </div>
+                {% endif %}
+                {% if user.tm_user.is_tutor %}
+                <div class="col-md-6">
+                    <div class="card"  style="margin: 0 auto">
+                        <div class="card-header">Incoming Requests</div>
+                        <div class="card-body">
+                        <ul class="list-group">
+                            {% if requests %}
+                            {% for request in requests %}
+                                <li class="list-group-item">Request from
+                                    <a href="{% url 'tutor_me:edit_profile' request.from_user.auth_user.id %}" style="text-decoration: none; color: #0DC9EFFF; font-weight: bolder">
+                                        {{request.from_user.name}}</a>
+                                    for {{request.booking.course}} at {{request.booking.time.to_string}} <br>
+                                    <button class="btn btn-success btn-sm" style="margin-top: 3px">
+                                        <a href="{% url 'tutor_me:accept_request' request.id %}" style="text-decoration: none !important; color: white">Accept</a>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" style="margin-top: 3px" data-bs-toggle="modal" data-bs-target="#declinestudent">
+<!--                                        <a href="{% url 'tutor_me:decline_request' request.id %}" style="text-decoration: none !important; color: white">Decline</a>-->
+                                        Decline
+                                    </button>
+                                    <div class="modal fade" id="declinestudent" tabindex="-1" aria-labelledby="declineModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="declineModalLabel">Decline {{request.from_user.name}}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to decline {{request.from_user.name}} for a tutoring session at {{request.booking.time.to_string}}?<br><br> This action cannot be undone.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-danger">
+                                                        <a href="{% url 'tutor_me:decline_request' request.id %}" style="text-decoration: none !important; color: white">Decline Student</a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-md-6">
+                                No incoming requests
+                            </div>
+                            {% endif %}
+                        </ul>
+                        </div>
+                    </div>
+                    </div>
+                {% endif %}
+                {% if user.tm_user.is_student %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">Outgoing Requests</div>
+                        <div class="card-body">
+                        <ul class="list-group">
+                            {% if requests %}
+                            {% for request in requests %}
+                            <li class="list-group-item">Request to
+                                <a href="{% url 'tutor_me:edit_profile' request.to_user.auth_user.id %}">{{request.to_user.name}}</a>
+                                for {{request.booking.course}} at {{request.booking.time.to_string}} <br>
+                                <button class="btn btn-danger btn-sm" style="margin-top: 3px"><a href="{% url 'tutor_me:decline_request' request.id %}" style="text-decoration: none !important; color: white">Delete</a></button>
+                            </li>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-md-6">
+                                No outgoing requests
+                            </div>
+                            {% endif %}
+                        </ul>
+                        </div>
+                    </div>
+                    </div>
+                {% endif %}
+            </div>
+        <!-- </main> -->
+            <div class="row">
+                <!-- filler  -->
+            </div>
+        </div>
+    {% else %}
+    <div class="container-fluid" style="margin-bottom: 15px; justify-content: center; margin-top: 30px">
+        <p style="text-align: center; font-family: 'Raleway', sans-serif; font-size: x-large;">Welcome, you are not logged in.</p>
+        <p style="text-align: center; font-family: 'Raleway', sans-serif; font-size: medium;">Please login to use all the features in the app.</p>
+        <form action="{% provider_login_url 'google' %}" class="form-button">
+            <button type="submit" class="submit-button"><img src="../../static/tutor_me/images/Google__G__Logo%202.png" alt="Image" width="20px" height="20px"/> Login with Google</button>
+        </form>
+    {% endif %}
+    </div>
+</div>
+
+
+</body>
+</html>

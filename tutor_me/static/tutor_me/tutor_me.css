@@ -1,0 +1,144 @@
+/* Styling for Home Page of app */
+.submit-button {
+    font-family: 'Roboto', sans-serif;
+    border-color: rgba(89,166,255,0.82);
+    background-color: white;
+    color: #4A9DFF;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 20px;
+    border-style: solid;
+}
+
+.login-button {
+    background-color: #7692FF;
+    border-color: #7692FF;
+    color: white;
+    border-style: solid;
+    font-size: 20px;
+    margin-top: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.form-button {
+    text-align: center;
+    margin-top: 9px;
+}
+
+
+.homepage-logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    width: auto;
+}
+
+.navbar-logo {
+    margin-left: 10px;
+}
+
+.course-list {
+    display: inline-block;
+    background-color: #79aec8;
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.dept-header {
+    text-align: center;
+    padding: 40px;
+    color: #084b83;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    grid-auto-flow: dense;
+}
+
+.wrapper li.landscape {
+    grid-column-end: span 2;
+}
+
+.unbulleted {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+div.card {
+  width: 500px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+.submit:hover {
+    color: cadetblue;
+}
+
+.form-submit {
+    margin-left: 240px;
+    margin-top: 20px;
+    background-color: white;
+    border-color: #7692FF;
+    color: #7692FF;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    padding: 8px;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.form-submit:hover {
+    background-color: #7692FF;
+    color: white;
+    border-color: #084b83;
+    transition-delay: inherit;
+}
+
+.a-buttons {
+    background-color: white;
+    border-color: #0DC9EFFF;
+    color: #0DC9EFFF;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    padding: 7px;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.a-buttons:hover {
+    background-color: #0DC9EFFF;
+    color: white;
+    border-color: #0DC9EFFF;
+    transition-delay: inherit;
+}
+
+.red-button {
+    background-color: white;
+    border-color: red;
+    color: red;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    padding: 7px;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.red-button:hover {
+    color: white;
+    background-color: red;
+    border-color: red;
+    text-decoration: none;
+    color: red;
+}
+
+
+
+
+
+

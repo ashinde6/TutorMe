@@ -1,0 +1,117 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+</head>
+<div id="api-data"></div>
+<body>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "{% url 'retrieve_courses_for_dept' %}",
+                type: "GET",
+                success: function(data) {
+                    var html = "<table>";
+                    html += "<thead><tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr></thead>";
+                    html += "<tbody>";
+                    for (var i = 0; i < data.length; i++) {
+                        html += "<tr>";
+                        html += "<td>" + data[i].field1 + "</td>";
+                        html += "<td>" + data[i].field2 + "</td>";
+                        html += "<td>" + data[i].field3 + "</td>";
+                        html += "</tr>";
+                    }
+                    html += "</tbody></table>";
+                    $("#api-data").html(html);
+                }
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    
+</body>
+
+</html> -->
+
+<!-- This is not currently working (permission error with SIS) but if it does
+it should output the SIS information in a boostrap table -->
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Courses on SIS</title>
+
+    <!-- <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> -->
+  </head>
+
+  <body>
+
+      <header>
+
+      </header>
+
+      <section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+    th{ 
+        color:#fff;
+            }
+</style>
+
+
+<table class="table table-striped">
+    <tr  class="bg-info">
+        <th>Course Name</th>
+        <th>Course Number</th>
+        <th>Instructor</th>
+    </tr>
+
+    <tbody id="myTable">
+        
+    </tbody>
+</table>
+
+<script>
+	var myArray = []
+	
+
+	$.ajax({
+		method:'GET',
+		url:'"https://sisuva.admin.virginia.edu/psc/ihprd/UVSS/SA/s/WEBLIB_HCX_CM.H_CLASS_SEARCH.FieldFormula.IScript_ClassSearch?institution=UVA01&term=1228"',
+        // url = url + '&subject=' + dept + '&page=1', 
+		success:function(response){
+			myArray = response.data
+			buildTable(myArray)
+			console.log(myArray)
+		}
+	})
+
+
+
+	function buildTable(data){
+		var table = document.getElementById('myTable')
+
+		for (var i = 0; i < data.length; i++){
+			var row = `<tr>
+							<td>${data[i].descr}</td>
+							<td>${data[i].subject}</td>
+							<td>${data[i].instructor}</td>
+					  </tr>`
+			table.innerHTML += row
+
+
+		}
+	}
+
+</script>
+
+      </section>
+  </body>
+</html>

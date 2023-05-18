@@ -1,0 +1,50 @@
+{% load socialaccount %}
+{% load bootstrap5 %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link rel="stylesheet" href="../../static/tutor_me/tutor_me.css">
+
+<html>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #7692FF">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <img src="../../static/tutor_me/images/Group 4.png" width="30" height="30" alt="" class="navbar-logo">
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav">
+                <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:main' %}">TutorMe</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:courses' %}">Courses</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:profile' user.id %}">Profile</a></li>
+            </ul>
+            {% endif %}
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0" action="{% url 'tutor_me:courses' %}">
+                <input class="form-control mr-sm-2" name="dept" placeholder="Search for a department" style="margin-right: 5px;">
+                <button class="btn btn-info my-2 my-sm-0" style="color: white" type="submit">Search</button>
+            </form>
+
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item active"><a class="nav-link" href="{% url 'tutor_me:logout' %}">Logout</a></li>
+                {% else %}
+                    <form action="{% provider_login_url 'google' %}" class="form-button">
+                        <button type="submit" class="submit-button"><img src="../../static/tutor_me/images/Google__G__Logo%202.png" alt="Image" width="20px" height="20px"/> Login with Google</button>
+                    </form>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <h2>Tutors for {{ course }}</h2>
+    <!-- {% for user in TM_User.objects.values %}
+        {% if user.is_tutor %}
+            {{user.name}}
+        {% endif %}
+    {% endfor %} -->
+    {% comment %}
+        - Output a list through all the tutors who have added this course in their profile
+        - allow for the user to click on each tutor to go to their profile
+    {% endcomment %}
+
+</body>
+</html>
